@@ -15,12 +15,17 @@ class Hexastore
     /** @var string */
     private $separator;
 
-    public function __construct(Client $client, string $key, string $separator = ':', string $escape = '#')
+    public function __construct(
+        Client $client,
+        string $keyForSortedSetOfTriples,
+        string $tripleSeparator = ':',
+        string $tripleEscapeChar = '#'
+    )
     {
         $this->client = $client;
-        $this->key = $key;
-        $this->separator = $separator;
-        $this->escapeChar = $escape;
+        $this->key = $keyForSortedSetOfTriples;
+        $this->separator = $tripleSeparator;
+        $this->escapeChar = $tripleEscapeChar;
     }
 
     public function delete(string $subject, string $predicate, string $object): void
