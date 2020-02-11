@@ -102,7 +102,7 @@ function isId(string $value): bool
         <?php elseif (substr_count(trim($entity), "\n")): ?>
 
         <pre><?php out('%s', $entity); ?></pre>
-        <?php endif ?>
+        <?php elseif ($entity): ?>
 
         <p><?php out('%s', $entity); ?></p>
         <?php endif ?>
