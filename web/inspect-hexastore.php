@@ -9,8 +9,8 @@ $redis = new Client(
     sprintf("tcp://%s:%d", REDIS_HOST, REDIS_PORT),
     ['parameters' => ['database' => REDIS_DB_INDEX, 'password' => REDIS_PASSWORD]]
 );
-$hexastore = new Hexastore($redis, 'hexastore/triples', '|', '\\');
-$entity = isset($_GET['e']) ? $redis->hgetall('hexastore/node/' . $_GET['e']) : null;
+$hexastore = new Hexastore($redis, HEXASTORE_TRIPLES_KEY, HEXASTORE_TRIPLE_SEPARATOR, HEXASTORE_TRIPLE_ESCAPE);
+$entity = isset($_GET['e']) ? unserialize($redis->get(HEXASTORE_OBJECT_KEY_PREFIX . $_GET['e'])) : null;
 
 function out(): void
 {
@@ -108,7 +108,7 @@ function isId(string $value): bool
                 <?php endif;
                 $searchResults = $hexastore->find(
                     $_GET['e'] ?? null,
-                    $_GET['p'] ?? ($_GET ? null : FALLBACK_PREDICATE),
+                    $_GET['p'] ?? ($_GET ? null : HEXASTORE_FALLBACK_PREDICATE),
                     $_GET['o'] ?? null
                 );
                 foreach ($searchResults as [$s, $p, $o]): ?>
