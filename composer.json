@@ -1,0 +1,9 @@
+{
+    "name": "kepawni/limerick",
+    "description": "A Redis-based Hexastore implementation",
+    "type": "library",
+    "require": {
+        "predis/predis": "^1.1"
+    },
+    "license": "GPL-3.0-only"
+}
