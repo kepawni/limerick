@@ -10,7 +10,9 @@ $redis = new Client(
     ['parameters' => ['database' => REDIS_DB_INDEX, 'password' => REDIS_PASSWORD]]
 );
 $hexastore = new Hexastore($redis, HEXASTORE_TRIPLES_KEY, HEXASTORE_TRIPLE_SEPARATOR, HEXASTORE_TRIPLE_ESCAPE);
-$entity = isset($_GET['e']) ? unserialize($redis->get(HEXASTORE_OBJECT_KEY_PREFIX . $_GET['e'])) : null;
+$entity = isset($_GET['e']) ? $redis->get(HEXASTORE_OBJECT_KEY_PREFIX . $_GET['e']) : null;
+$rehydrated = unserialize($entity);
+$entity = $rehydrated !== false && !($rehydrated instanceof __PHP_Incomplete_Class) ? $rehydrated : $entity;
 
 function out(): void
 {
@@ -76,7 +78,10 @@ function isId(string $value): bool
         </style>
     </head>
     <body>
-        <?php if ($entity): ?>
+        <?php if ($entity && ($entity instanceof JsonSerializable)): ?>
+
+        <pre><?php out('%s', json_encode($entity, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)); ?></pre>
+        <?php elseif ($entity && (is_object($entity) || is_array($entity))): ?>
 
         <table>
             <tbody>
@@ -93,6 +98,16 @@ function isId(string $value): bool
 
             </tbody>
         </table>
+        <?php elseif (substr_count(trim($entity), "\n")): ?>
+
+        <pre><?php out('%s', $entity); ?></pre>
+        <?php endif ?>
+
+        <p><?php out('%s', $entity); ?></p>
+        <?php endif ?>
+
+        <?php if ($entity): ?>
+
         <hr />
         <?php endif ?>
 
