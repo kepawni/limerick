@@ -70,7 +70,8 @@ function isId(string $value): bool
             
             div.arrow {
                 border: 14px solid transparent;
-                border-top: 20px #888;
+                border-top-width: 20px;
+                border-top-color: #888;
                 border-bottom-width: 0;
                 width: 0;
                 margin: 0 auto
